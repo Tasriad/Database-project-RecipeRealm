@@ -5,6 +5,7 @@ import { MdOutlineRestaurantMenu } from 'react-icons/md';
 import images from '../../constants/images';
 import './Navbar.css';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = React.useState(false);
@@ -21,9 +22,9 @@ const Navbar = () => {
         <li className="p__opensans"><a href="#contact">Contact</a></li>
       </ul>
       <div className="app__navbar-login">
-        <a href="#login" className="p__opensans">Log In / Signup</a>
+        {/* <a href="/login" clLinkssName="p__opensans">Log In / Signup</a> */}
         <div />
-        <a href="/" className="p__opensans">Guest Explore</a>
+        <a href="/login" className="p__opensans">Log In / Signup</a>
       </div>
       <div className="app__navbar-smallscreen">
         <GiHamburgerMenu color="#fff" fontSize={27} onClick={() => setToggleMenu(true)} />

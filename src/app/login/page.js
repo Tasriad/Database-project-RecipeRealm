@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import Link from 'next/link'; // Import Link from Next.js
 import { useRouter } from 'next/navigation'; // Import useRouter from Next.js
 import { toast } from "react-toastify";
-import axios from 'axios';
+// import axios from 'axios';
 import styles from '@/styles/login.module.css'; // Import the CSS module
+import axios from 'axios';
 
 const Login = () => {
     const router = useRouter()
@@ -24,25 +25,46 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Login form submitted")
+        console.log(formData)
         try {
             axios.post('/api/login', formData).then((res) => {
-                toast.success("Login success", { hideProgressBar: true, autoClose: 1000 })
-                router.push("/profile")
+                console.log(res.data)
+                if(res.data.success){
+                    toast.success("Login success", { hideProgressBar: true, autoClose: 1000 })
+                    router.push("/profile")
+                }
+                else{
+                    throw new Error(res.data.message)
+                }
             }).catch((err) => {
-                toast.error("Login failed " + err.message, { hideProgressBar: true, autoClose: 1000 });
-                setFormData({
-                    email: "",
-                    password: ""
-                })
-                router.push("/login")
+                console.log(err)
+                toast.error(err.message, { hideProgressBar: true, autoClose: 1000 });
             })
+        } catch (error) {
+            toast.error(error.message, { hideProgressBar: true, autoClose: 1000 });
         }
-        catch (error) {
-            toast.error("Login failed " + error.message, { hideProgressBar: true, autoClose: 1000 });
-            router.push("/login")
-        }
+        // try {
+        //     axios.post('/api/login', formData).then((res) => {
+        //         toast.success("Login success", { hideProgressBar: true, autoClose: 1000 })
+        //         router.push("/profile")
+        //     }).catch((err) => {
+        //         console.log(err)
+        //         toast.error("Login not successfull " + err.message, { hideProgressBar: true, autoClose: 1000 });
+        //         setFormData({
+        //             email: "",
+        //             password: ""
+        //         })
+        //         router.push("/login")
+        //     })
+        // }
+        // catch (error) {
+        //     toast.error("Login failed " + error.message, { hideProgressBar: true, autoClose: 1000 });
+        //     router.push("/login")
+        // }
     };
     useEffect(() => {
+        router.refresh()
         setFormData({
             email: "",
             password: ""
@@ -81,7 +103,7 @@ const Login = () => {
             <h1 className={styles.welcomeTitle}>WELCOME TO RECIPE REALM</h1>
             <div className={styles.loginForm}>
                 <h1 className={styles.title}>Log In</h1>
-                <form onSubmit={handleSubmit} className={styles.form}>
+                <form className={styles.form}>
                     <div className={styles.formGroup}>
                         <input
                             type="email"
@@ -106,7 +128,7 @@ const Login = () => {
                             className={styles.input}
                         />
                     </div>
-                    <button type="submit" className={styles.button}>
+                    <button type="submit" className={styles.button} onClick={handleSubmit}>
                         Log In
                     </button>
                 </form>

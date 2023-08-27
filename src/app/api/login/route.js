@@ -1,35 +1,33 @@
 import { NextResponse, NextRequest } from 'next/server'
 import jwt from 'jsonwebtoken'
 import oracledb from 'oracledb';
-const config = {
-    user: 'UNI',
-    password: '12345',
-    connectString: 'localhost:1521/orclpdbt'
-}
+import runQuery from '@/utils/database_manager';
 export async function POST(request) {
     try {
         const reqBody = await request.json()
         let { email, password } = reqBody;
-        const user = await get_user_email(email);
-        if (user.rows.length == 0) {
-            console.log("user does not exist")
-            throw new Error("user does not exist")
+        console.log(email, password)
+        const query = `
+        BEGIN
+        LOGIN(:email,:password,:status,:id,:first_name,:last_name,:email_address,:reg_date);
+        END;`;
+        const binds = {
+            email: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: email },
+            password: { dir: oracledb.BIND_IN, type: oracledb.STRING, val: password },
+            status: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+            id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+            first_name: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+            last_name: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+            email_address: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+            reg_date: { dir: oracledb.BIND_OUT, type: oracledb.STRING },            
+        };
+        const result = await runQuery(query, false, binds);
+        if (result.outBinds.status != 'SUCCESSFUL') {
+            throw new Error(result.outBinds.status.toString());
         }
-        const password_to_check = (user.rows[0].PASSWORD).replace('"', '')
-        password = password.replace('"', '')
-        if (password != password_to_check) {
-            console.log("password does not match")
-            throw new Error("password does not match")
-        }
-        const tokenData = {
-            "id": user.rows[0].USER_ID,
-            "email": user.rows[0].EMAIL_ADDRESS,
-            "first_name": user.rows[0].FIRST_NAME,
-            "last_name": user.rows[0].LAST_NAME,
-            "profile_pic": user.rows[0].PROFILE_PICTURE,
-            "regis_date": user.rows[0].REGISTRATION_DATE
-        }
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: "7d" })
+        console.log(result.outBinds)
+        const tokenData = result.outBinds;
+        const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: "7d" })
         const response = NextResponse.json({
             message: "Login successful",
             success: true,
@@ -37,32 +35,15 @@ export async function POST(request) {
         response.cookies.set(process.env.TOKEN_NAME, token, {
             httpOnly: true,
         })
-        return response
+        return response;
 
     } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({
+            message: error.message,
+            success: false
+        }, { status: 200 })
     }
 }
 
 
 
-
-async function get_user_email(mail) {
-    let connection
-    const TABLE = "USERS"
-    try {
-        connection = await oracledb.getConnection(config)
-        let result = await connection.execute(
-            `SELECT * FROM ${TABLE} WHERE email_address = '${mail}'`,
-            [], { outFormat: oracledb.OUT_FORMAT_OBJECT }
-        )
-        await connection.commit();
-        return result
-
-    } catch (error) {
-        return (error)
-    }
-    finally {
-        connection.close()
-    }
-}
