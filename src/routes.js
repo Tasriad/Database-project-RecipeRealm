@@ -3,7 +3,7 @@ import { BsSpeedometer2 } from "react-icons/bs";
 import { BiUserCircle,BiCategory,BiSolidLogOutCircle } from "react-icons/bi";
 import { AiOutlineBarChart,AiFillTags } from "react-icons/ai";
 import { VscBook } from "react-icons/vsc";
-import { MdLocalLibrary } from "react-icons/md";
+import { MdLocalLibrary,MdShoppingCart } from "react-icons/md";
 import { GiMeal } from "react-icons/gi";
 
 export default [
@@ -41,6 +41,11 @@ export default [
         to: '/mealplan',
         name: 'Meal Plans',
         Icon: GiMeal
+    },
+    {
+        to: '/shoppinglists',
+        name: 'Shopping Lists',
+        Icon: MdShoppingCart
     },
     {
         to: '/dashboard',
