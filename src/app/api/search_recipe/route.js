@@ -29,7 +29,7 @@ export async function GET(request) {
             recipes.push(recipe);
         }
         recipeSet.close();
-        await closeConnection();
+        closeConnection();
         return NextResponse.json({ data: recipes });
 
     } catch (err) {

@@ -32,7 +32,6 @@ export async function GET(request) {
             recipes.push(recipe);
         }
         recipeSet.close();
-        await closeConnection();
         return NextResponse.json({ data: recipes });
 
     }

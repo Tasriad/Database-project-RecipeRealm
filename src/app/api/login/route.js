@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server'
 import jwt from 'jsonwebtoken'
 import oracledb from 'oracledb';
 import runQuery from '@/utils/database_manager';
+import { closeConnection } from '@/utils/database_manager';
 export async function POST(request) {
     try {
         const reqBody = await request.json()
@@ -37,6 +38,7 @@ export async function POST(request) {
         response.cookies.set(process.env.TOKEN_NAME, token, {
             httpOnly: true,
         })
+        closeConnection();
         return response;
 
     } catch (error) {

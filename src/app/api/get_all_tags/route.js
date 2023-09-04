@@ -24,7 +24,6 @@ export async function GET(request) {
             tags.push(tag);
         }
         tagSet.close();
-        await closeConnection();
         return NextResponse.json({ data: tags, success: true });
     } catch (err) {
         console.log(err)
