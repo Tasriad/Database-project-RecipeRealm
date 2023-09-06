@@ -87,9 +87,15 @@ export default function EditProfile() {
               </div>
             </div>
             <div classname={styles.formgroup}>
-              <label className={`control-label ${styles.editProfileHeading}`}>Confirm password:</label>
+              <label className={`control-label ${styles.editProfileHeading}`}>Confirm Password:</label>
               <div className="col-md-12">
                 <input classname={styles.formcontrol} type="password" defaultValue={11111122333} />
+              </div>
+            </div>
+            <div classname={styles.formgroup}>
+              <label className={`control-label ${styles.editProfileHeading}`}>Update Dietary Restriction:</label>
+              <div className="col-lg-12">
+                <input classname={styles.formcontrol} type="text" defaultValue="Vegeterian"/>
               </div>
             </div>
             <div className={styles.formgroup}>
