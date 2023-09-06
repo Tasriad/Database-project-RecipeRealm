@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import runQuery from "@/utils/database_manager";
 import oracledb from "oracledb";
-import { closeConnection } from "@/utils/database_manager";
 import jwt from "jsonwebtoken";
 
 export async function GET(request) {

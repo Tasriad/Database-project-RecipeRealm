@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import oracledb from "oracledb";
 import runQuery from "@/utils/database_manager";
-import { closeConnection } from "@/utils/database_manager";
 
 export async function GET(request) {
     const id = request.nextUrl.searchParams.get("id")
@@ -15,7 +14,7 @@ export async function GET(request) {
         }
         const query = `
         BEGIN
-        RECIPE_DETAILS(:ID,:STATUS,:RECIPES_CR ,:INGREDIENTS_CR,:CATEGORIES_CR,:TAGS_CR,:REVIEWS_CR,:MEDIA_CR);
+        RECIPE_DETAILS(:ID,:STATUS,:RECIPES_CR ,:INGREDIENTS_CR,:CATEGORIES_CR,:TAGS_CR,:REVIEWS_CR,:MEDIA_CR,:SUB_INGREDIENT_CR,:NEUTRITION_CR);
         END;`;
         const binds = {
             ID: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: recipeId },
@@ -26,6 +25,8 @@ export async function GET(request) {
             TAGS_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             REVIEWS_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             MEDIA_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+            SUB_INGREDIENT_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+            NEUTRITION_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
         }
         const result = await runQuery(query, false, binds);
         if (result.outBinds.STATUS !== "SUCCESSFUL") {
@@ -75,7 +76,20 @@ export async function GET(request) {
             medias.push(media);
         }
         mediaSet.close();
-        closeConnection();
+        const subIngredientSet = result.outBinds.SUB_INGREDIENT_CR;
+        let subIngredient;
+        let subIngredients = [];
+        while ((subIngredient = await subIngredientSet.getRow())) {
+            subIngredients.push(subIngredient);
+        }
+        subIngredientSet.close();
+        const nutritionSet = result.outBinds.NEUTRITION_CR;
+        let nutrition;
+        let nutritions = [];
+        while ((nutrition = await nutritionSet.getRow())) {
+            nutritions.push(nutrition);
+        }
+        nutritionSet.close();
         return NextResponse.json({
             success: true,
             recipes: recipes,
@@ -83,7 +97,9 @@ export async function GET(request) {
             categories: categories,
             tags: tags,
             reviews: reviews,
-            medias: medias
+            medias: medias,
+            subIngredients: subIngredients,
+            nutritions: nutritions
         }, { status: 200 });
 
     }

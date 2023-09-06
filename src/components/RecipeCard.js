@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation"
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from "next/link";
 
-export default function RecipeCard({ recipeID = '',publisher='test', rating = 5, title = "test", description = "test",baseLink = '', image = 'gallery01' }) {
+export default function RecipeCard({ recipeID = '',publisher='test', rating = 5, title = "test", description = "test",baseLink = '/recipe', image = 'gallery01' }) {
 
     const router = useRouter();
     if(title?.length>18)

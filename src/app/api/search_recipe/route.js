@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import oracledb from "oracledb";
 import runQuery from "@/utils/database_manager";
-import { closeConnection } from "@/utils/database_manager";
 
 export async function GET(request) {
     try {
@@ -29,7 +28,6 @@ export async function GET(request) {
             recipes.push(recipe);
         }
         recipeSet.close();
-        closeConnection();
         return NextResponse.json({ data: recipes });
 
     } catch (err) {

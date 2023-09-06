@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import runQuery, { closeConnection } from "@/utils/database_manager.js"
+import runQuery from "@/utils/database_manager.js"
 import OracleDB from "oracledb";
 
 export async function POST(request) {
@@ -19,7 +19,6 @@ export async function POST(request) {
             status: { dir: OracleDB.BIND_OUT, type: OracleDB.STRING }
         };
         const result = await runQuery(query, true, binds);
-        closeConnection();
         if (result.outBinds.status == 'SUCCESSFUL') {
             return NextResponse.json({
                 message: "Signup successful",

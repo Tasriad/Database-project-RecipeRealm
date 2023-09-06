@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
-import runQuery, { closeConnection } from '@/utils/database_manager';
+import runQuery from '@/utils/database_manager';
 
 export async function POST(request) {
     try {
@@ -11,7 +11,6 @@ export async function POST(request) {
             recipe_id: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: recipe_id }
         }
         const result = await runQuery(query, true, binds);
-        closeConnection();
         return NextResponse.json({ message: 'success' }, { status: 200 })
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 200 })
