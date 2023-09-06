@@ -4,9 +4,10 @@ import { useEffect } from 'react';
 import Link from 'next/link'; // Import Link from Next.js
 import { useRouter } from 'next/navigation'; // Import useRouter from Next.js
 import { toast } from "react-toastify";
-// import axios from 'axios';
+import Image from 'next/image';
 import styles from '@/styles/login.module.css'; // Import the CSS module
 import axios from 'axios';
+import images  from '@/constants/images';
 
 const Login = () => {
     const router = useRouter()
@@ -44,65 +45,24 @@ const Login = () => {
         } catch (error) {
             toast.error(error.message, { hideProgressBar: true, autoClose: 1000 });
         }
-        // try {
-        //     axios.post('/api/login', formData).then((res) => {
-        //         toast.success("Login success", { hideProgressBar: true, autoClose: 1000 })
-        //         router.push("/profile")
-        //     }).catch((err) => {
-        //         console.log(err)
-        //         toast.error("Login not successfull " + err.message, { hideProgressBar: true, autoClose: 1000 });
-        //         setFormData({
-        //             email: "",
-        //             password: ""
-        //         })
-        //         router.push("/login")
-        //     })
-        // }
-        // catch (error) {
-        //     toast.error("Login failed " + error.message, { hideProgressBar: true, autoClose: 1000 });
-        //     router.push("/login")
-        // }
     };
     useEffect(() => {
         router.refresh()
+        router.prefetch("/profile")
+        router.prefetch("/signup")
         setFormData({
             email: "",
             password: ""
         })
     }, []);
 
-    const [bgIndex, setBgIndex] = useState(0);
-
-    const backgroundImages = [
-        '/images/bg1.jpg',
-        '/images/bg2.jpg',
-        '/images/bg3.jpg',
-        '/images/bg4.jpg',
-        '/images/bg5.jpg',
-        '/images/bg6.jpg',
-        '/images/bg7.jpg',
-        '/images/bg8.jpg',
-        '/images/bg9.jpg'
-    ];
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // Calculate the next background index
-            const nextIndex = (bgIndex + 1) % backgroundImages.length;
-            setBgIndex(nextIndex);
-        }, 10000); // 10000 milliseconds = 10 seconds
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [bgIndex]);
     return (
-        <div className={styles.container} style={{
-            backgroundImage: `url('${backgroundImages[bgIndex]}')`,
-        }}>
+        <div className={styles.container} >
             <div className={styles.backgroundImages}></div>
-            <h1 className={styles.welcomeTitle}>WELCOME TO RECIPE REALM</h1>
+            <Link  href={'/home'} class="flex text-4xl font-serif flex-col items-center justify-center mx-auto m-10">
+            <Image loading='lazy' class="w-15 h-15 m-2" src={images.RR} alt="logo" /></Link>
             <div className={styles.loginForm}>
-                <h1 className={styles.title}>Log In</h1>
+                <h1 className={styles.title}><b>Log In</b></h1>
                 <form className={styles.form}>
                     <div className={styles.formGroup}>
                         <input
@@ -132,7 +92,7 @@ const Login = () => {
                         Log In
                     </button>
                 </form>
-                <p >
+                <p className="text-yellow-500 text-shadow-md">
                     Don't have an account?{' '}
                     <Link className={styles.signupText} href="/signup">
                         Sign up

@@ -2,8 +2,6 @@ import { NextResponse, NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 export async function POST(request) {
     try {
-        const reqBody = await request.json()
-        let { id } = reqBody;
         const response = NextResponse.json({
             message: "Logout successful"
         }, { status: 200 })

@@ -14,7 +14,7 @@ const Header = () => (
     </div>
 
     <div className="app__wrapper_img">
-      <Image src={images.welcome} alt="header_img" />
+      <Image src={images.welcome} alt="header_img" loading = 'lazy' />
     </div>
   </div>
 );

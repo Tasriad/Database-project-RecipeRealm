@@ -23,7 +23,7 @@ const SpecialMenu = () => (
       </div>
 
       <div className="app__specialMenu-menu_img">
-        <Image src={images.menu} alt="menu__img" />
+        <Image loading = 'lazy' src={images.menu} alt="menu__img" />
       </div>
 
       <div className="app__specialMenu-menu_cocktails  flex__center">

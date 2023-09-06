@@ -1,0 +1,68 @@
+/* styles.css */
+
+/* Global styles */
+.container {
+
+    background-image: url('/images/bg8.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #000000; /* Text color for better visibility */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+  }
+  
+  .row {
+    margin: 0 -15px;
+  }
+  
+  /* Avatar styles */
+  .avatar {
+    max-width: 100px;
+    border-radius: 50%;
+  }
+  
+  /* Personal info styles */
+  .personal-info {
+    border: 1px solid #121010; /* Add your desired border styles */
+    padding: 20px; /* Add some padding for spacing within the form */
+    border-radius: 5px; /* Optional: Add border radius for rounded corners */
+  }
+  
+  .alert-info {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+  }
+  
+  /* Form styles */
+  .form-horizontal {
+    margin-top: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .control-label {
+    font-weight: bold;
+  }
+  
+  /* Button styles */
+  .btn-primary {
+    background-color: #337ab7;
+    color: #fff;
+  }
+  
+  .btn-default {
+    background-color: #ccc;
+  }
+  
+  /* Additional styles can be added as needed */
+  
+  /* You can also add custom styles for other elements or classes as required */
+  

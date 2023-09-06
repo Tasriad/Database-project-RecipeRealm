@@ -5,12 +5,17 @@
   background-repeat: no-repeat;
   display: flex;
   justify-content: center;
-  flex-direction: column; /* Change to column layout */
-  align-items: center; /* Center items horizontally */
+  flex-direction: column;
+  /* Change to column layout */
+  align-items: center;
+  /* Center items horizontally */
   align-items: center;
   min-height: 100vh;
   position: relative;
+  background: rgb(255,188,3);
+  background: linear-gradient(90deg, rgba(255,188,3,1) 7%, rgba(0,0,0,1) 50%, rgba(255,188,3,1) 95%);
 }
+
 .backgroundImage {
   position: absolute;
   top: 0;
@@ -21,35 +26,41 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
+
 .loginForm {
-  background-color: rgba(
-    249,
-    249,
-    247,
-    0.8
-  ); /* Adjust the background color's opacity */
-  background-image: none; /* Remove the original background color */
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.212); /* Adjust the background color's opacity */
+  border-radius: 10px; /* Rounded corners */
   padding: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 234, 6, 0.797); /* Box shadow for depth */
   width: 400px;
+  margin: 0 auto; /* Center the form horizontally */
 }
+
 .welcomeTitle {
-  font-size: 80px; /* Adjust the font size */
-  margin-bottom: 20px; /* Increase the margin to create space */
-  color: #272727; /* Adjust the color to your preferred color value */
-  text-align: center; /* Center the title horizontally */
+  font-size: 80px;
+  /* Adjust the font size */
+  margin-bottom: 20px;
+  /* Increase the margin to create space */
+  color: #272727;
+  /* Adjust the color to your preferred color value */
+  text-align: center;
+  /* Center the title horizontally */
 }
 
 .title {
-  font-size: 24px;
+  font-size: 34px;
   margin-bottom: 20px;
-  text-align: center;.welcomeTitle {
-  font-size: 50px; /* Adjust the font size */
-  margin-bottom: 10px;
   text-align: center;
-  color: #333; /* Adjust the color to your preferred color value */
-}
+  color: goldenrod;
+
+  .welcomeTitle {
+    font-size: 50px;
+    /* Adjust the font size */
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
+    /* Adjust the color to your preferred color value */
+  }
 }
 
 .form {
@@ -64,13 +75,18 @@
 .input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #030000;
+  background: rgba(255, 255, 255, 0.212);
+  border: 1px solid gold;
   border-radius: 5px;
+  color: gold;
+}
+.input::placeholder {
+  color: gold; /* Change the color to your desired color */
 }
 
 .button {
-  background-color: #007bff;
-  color: white;
+  background-color: #000000;
+  color: goldenrod;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -78,12 +94,17 @@
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: gray;
+  color: gold;
 }
 
 .signupText {
-  color: #007bff;
+  color: goldenrod;
   /* Set the color to your preferred color value */
   margin-top: 10px;
   text-align: center;
+}
+
+.signupText:hover {
+  color: gold;
 }

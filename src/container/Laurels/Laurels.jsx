@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 const AwardCard = ({ award: { imgUrl, title, subtitle } }) => (
   <div className="app__laurels_awards-card">
-    <Image src={imgUrl} alt="awards" />
+    <Image loading = 'lazy' src={imgUrl} alt="awards" />
     <div className="app__laurels_awards-card_content">
       <p className="p__cormorant" style={{ color: '#DCCA87' }}>{title}</p>
       <p className="p__opensans">{subtitle}</p>
@@ -27,7 +27,7 @@ const Laurels = () => (
     </div>
 
     <div className="app__wrapper_img">
-      <Image src={images.R} alt="laurels_img" />
+      <Image loading = 'lazy' src={images.R} alt="laurels_img" />
     </div>
   </div>
 );

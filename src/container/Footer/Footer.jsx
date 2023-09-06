@@ -20,9 +20,9 @@ const Footer = () => (
       </div>
 
       <div className="app__footer-links_logo">
-        <Image src={images.RR} alt="footer_logo" />
+        <Image loading = 'lazy' src={images.RR} alt="footer_logo" />
         <p className="p__opensans">&quot;The best way to find yourself is to lose yourself in the service of others.&quot;</p>
-        <Image src={images.spoon} className="spoon__img" />
+        <Image loading = 'lazy' src={images.spoon} className="spoon__img" />
         <div className="app__footer-links_icons">
           <FiFacebook />
           <FiTwitter />

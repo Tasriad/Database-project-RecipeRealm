@@ -19,7 +19,7 @@ const FindUs = () => (
     </div>
 
     <div className="app__wrapper_img">
-      <Image src={images.findus} alt="finus_img" />
+      <Image loading = 'lazy' src={images.findus} alt="finus_img" />
     </div>
   </div>
 );

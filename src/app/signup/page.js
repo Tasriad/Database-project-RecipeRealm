@@ -4,18 +4,26 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Link from 'next/link';
- import styles from '@/styles/signup.module.css'; // Make sure the path to your CSS module is correct
+import { useEffect } from 'react';
+import styles from '@/styles/signup.module.css';
+
+const isBrowser = () => typeof window !== "undefined";
+
 
 const Signup = () => {
     const router = useRouter();
+    router.prefetch('/login')
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        confirmPassword: '',
+        first_name: '',
+        last_name: '',
+        emailAddress: '',
+        PASSWORD: '',
+        password_confirmation: '',
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(name, value);
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -24,10 +32,23 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(formData.PASSWORD !== formData.password_confirmation){
+            throw new Error("Password and confirm password do not match");
+        }
+        else
+        {
+            delete formData.password_confirmation;
+        }
+        console.log(formData);
         try {
             axios.post('/api/signup', formData).then((res) => {
-                toast.success('Signup successful', { hideProgressBar: true, autoClose: 1000 });
-                router.push('/profile');
+                if (res.data.success) {
+                    toast.success('Signup successful', { hideProgressBar: true, autoClose: 1000 });
+                    router.push('/login');
+                }
+                else {
+                    throw new Error(res.data.message);
+                }
             }).catch((err) => {
                 toast.error('Signup failed ' + err.message, { hideProgressBar: true, autoClose: 1000 });
             });
@@ -47,7 +68,7 @@ const Signup = () => {
                     </a>
                 </div>
                 <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-lg sm:rounded-lg">
-                    <form>
+                    <form onChange = {handleChange}>
                         <div>
                             <label
                                 htmlFor="name"
@@ -58,7 +79,7 @@ const Signup = () => {
                             <div className="flex flex-col items-start">
                                 <input
                                     type="text"
-                                    name="name"
+                                    name="first_name"
                                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 />
                             </div>
@@ -73,7 +94,7 @@ const Signup = () => {
                             <div className="flex flex-col items-start">
                                 <input
                                     type="text"
-                                    name="name"
+                                    name="last_name"
                                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 />
                             </div>
@@ -88,7 +109,7 @@ const Signup = () => {
                             <div className="flex flex-col items-start">
                                 <input
                                     type="email"
-                                    name="email"
+                                    name="emailAddress"
                                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 />
                             </div>
@@ -103,7 +124,7 @@ const Signup = () => {
                             <div className="flex flex-col items-start">
                                 <input
                                     type="password"
-                                    name="password"
+                                    name="PASSWORD"
                                     className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                 />
                             </div>
@@ -124,7 +145,7 @@ const Signup = () => {
                             </div>
                         </div>
                         <div className="flex items-center mt-4">
-                            <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
+                            <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600" onClick={handleSubmit}>
                                 Register
                             </button>
                         </div>
@@ -132,9 +153,9 @@ const Signup = () => {
                     <div className="mt-4 text-grey-600">
                         Already have an account?{" "}
                         <span>
-                            <a className="text-purple-600 hover:underline" href="#">
+                            <Link className="text-purple-600 hover:underline" href="/login">
                                 Log in
-                            </a>
+                            </Link>
                         </span>
                     </div>
                     <div className="flex items-center w-full my-4">

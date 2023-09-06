@@ -1,4 +1,5 @@
 import bg from '../../public/images/bg.png';
+import avatar from '../../public/avatar/profile.png';
 import chef from '../../public/images/chef.png';
 import G from '../../public/images/G.png';
 import gallery01 from '../../public/images/gallery01.png';
@@ -25,6 +26,7 @@ import R from '../../public/images/R.png';
 import tias from '../../public/images/tias.jpg'
 
 export default {
+  avatar,
   bg,
   chef,
   G,
