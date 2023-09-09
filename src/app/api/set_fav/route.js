@@ -1,18 +1,23 @@
 import { NextResponse, NextRequest } from 'next/server'
-import runQuery, { closeConnection } from '@/utils/database_manager';
+import runQuery from '@/utils/database_manager';
+import oracledb from 'oracledb';
+import jwt from 'jsonwebtoken';
 
 export async function POST(request) {
     try {
         const reqBody = await request.json()
-        let { user_id, recipe_id } = reqBody;
-        const query = `INSERT INTO favorites (user_id, recipe_id) VALUES (:user_id, :recipe_id)`
+        const { recipe_id } = reqBody;
+        const token = request.cookies.get('current_user')?.value || ''
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+        const user_id = decoded.id;
+        // const query = `INSERT INTO favorites (user_id, recipe_id) VALUES (:user_id, :recipe_id)`
         const binds = {
             user_id: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: user_id },
             recipe_id: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: recipe_id }
         }
-        const result = await runQuery(query, true, binds);
-        closeConnection();
-        return NextResponse.json({ message: 'success' }, { status: 200 })
+        console.log(binds)
+        // const result = await runQuery(query, true, binds);
+        return NextResponse.json({ message: 'success', success: true }, { status: 200 })
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 200 })
     }

@@ -6,7 +6,7 @@ const config = {
     password: "12345",
     connectString: "localhost:1521/orclpdbt",
 };
-export default async function runQuery(query,commit = false,binds = {}) {
+export default async function runQuery(query,commit,binds = {}) {
     const connection = await pool.acquire();
     try{
     const result = await connection.execute(query,binds,{outFormat: OracleDB.OUT_FORMAT_OBJECT});

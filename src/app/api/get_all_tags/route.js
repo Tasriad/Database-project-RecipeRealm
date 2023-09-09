@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import oracledb from "oracledb";
 
 import runQuery from "@/utils/database_manager";
-import { closeConnection } from "@/utils/database_manager";
 
 export async function GET(request) {
     try {

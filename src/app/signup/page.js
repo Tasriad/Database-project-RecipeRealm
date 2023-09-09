@@ -4,11 +4,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import styles from '@/styles/signup.module.css';
-
-const isBrowser = () => typeof window !== "undefined";
-
 
 const Signup = () => {
     const router = useRouter();

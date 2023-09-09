@@ -24,7 +24,6 @@ export async function GET(request) {
             catagorys.push(catagory);
         }
         catagorySet.close();
-         closeConnection();
         return NextResponse.json({ data: catagorys, success: true });
     } catch (err) {
         console.log(err)

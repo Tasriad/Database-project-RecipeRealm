@@ -2,7 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
 import oracledb, { NUMBER } from "oracledb";
 import runQuery from "@/utils/database_manager";
-import { closeConnection } from "@/utils/database_manager";
 
 export async function GET(request) {
     try {
@@ -21,7 +20,7 @@ export async function GET(request) {
         }
         const query = `
         BEGIN
-        USER_INFO(:ID,:STATUS,:DETAILS,:FOLLOWING,:DIETARY,:FAV_RECIPE,:CREATED_RECIPE);
+        USER_INFO(:ID,:STATUS,:DETAILS,:FOLLOWING,:DIETARY,:FAV_RECIPE,:CREATED_RECIPE,:MP_CR);
         END;`;
         const binds = {
             ID: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: userId },
@@ -31,6 +30,7 @@ export async function GET(request) {
             DIETARY: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             FAV_RECIPE: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             CREATED_RECIPE: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+            MP_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
         }
         const result = await runQuery(query, false, binds);
         if (result.outBinds.STATUS !== "SUCCESSFUL") {
@@ -71,7 +71,13 @@ export async function GET(request) {
             createds.push(created);
         }
         createdSet.close();
-        closeConnection();
+        const mpSet = result.outBinds.MP_CR;
+        let mp;
+        let mps = [];
+        while ((mp = await mpSet.getRow())) {
+            mps.push(mp);
+        }
+        mpSet.close();
         return NextResponse.json({
             success: true,
             loggedin: decoded.id,
@@ -79,7 +85,8 @@ export async function GET(request) {
             following: followings,
             dietaries: dietaries,
             created_recipes: createds,
-            favorites: favs
+            favorites: favs,
+            meal_plans: mps
         }, { status: 200 });
     }
     catch (err) {

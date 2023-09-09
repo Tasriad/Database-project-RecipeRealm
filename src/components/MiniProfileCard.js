@@ -23,7 +23,7 @@ export default function ProfileCard({ name='',email='',userID='' , baseLink = '/
         setIsLoading(true);
     }
     return (
-      <div className=" max-h-fit">
+      <div >
         <Card className="relative max-w-[16rem] max-h-[18rem] ">
             <CardHeader floated={false} color="blue-gray" className="relative flex flex-row justify-center bg-transparent">
                 <Image loading="lazy" className="object-cover m-1" width={50} height={50} src={images[`${image}`]} alt="ui/ux review check"

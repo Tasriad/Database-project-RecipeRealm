@@ -2,7 +2,6 @@
 
 /* Global styles */
 .container {
-
     background-image: url('/images/bg7.jpg');
     background-size: cover;
     background-position: center;
@@ -14,6 +13,7 @@
     align-items: center;
     justify-content: flex-start;
     padding: 20px;
+    width: 100%;
   }
 
   .editProfileHeading {
