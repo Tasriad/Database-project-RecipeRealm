@@ -4,10 +4,12 @@ import { Button } from '@mui/material';
 import Link from 'next/link';
 import useSWR,{preload} from 'swr';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const fetcher = (url) => axios.get(url).then((res) => res.data).catch((err) => console.log(err))
 
 export default function MealPlan() {
+    const router = useRouter()
     const { data: mealplans, error } = useSWR('/api/all_mealplans', fetcher, {
         revalidateIfStale: false,
         revalidateOnFocus: false,
@@ -15,9 +17,9 @@ export default function MealPlan() {
     })
     const id = 1
     return (
-        <div className=" border-slate-500 felx flex-col w-full h-full justify-center">
+        <div className=" border-slate-500 felx bg-white flex-col w-full h-screen justify-center">
             <div className="flex flex-row flex-wrap w-full justify-center">
-                <Button className=' bg-amber-300 hover:bg-amber-400' endIcon={<AddIcon />}>Add Meal</Button>
+                <Button className=' bg-amber-300 hover:bg-amber-400' endIcon={<AddIcon />} onClick={()=>router.push('mealplan/create')}>Add Meal</Button>
                 <ul className=' m-2 w-full h-full flex flex-row flex-wrap justify-center'>
                     <li className='h-full m-'>
                         <Link href={`/mealplan/${1}`} prefetch={true}>

@@ -105,6 +105,7 @@ export async function GET(request) {
         return NextResponse.json({
             success: true,
             isFav:(result.outBinds.IS_FAV?.toLowerCase?.() === 'true'),
+            userId:userId,
             recipes: recipes,
             ingredients: ingredients,
             categories: categories,

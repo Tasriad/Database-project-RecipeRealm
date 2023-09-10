@@ -7,7 +7,7 @@ export async function GET(request) {
     try {
         const token = request.cookies.get("current_user")?.value || "";
         if (!token) {
-            return NextResponse.json({ message: "No token", succss: false }, { status: 401 });
+            return NextResponse.json({ message: "No token", succss: false }, { status: 200 });
         }
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
         const id = decoded.id;

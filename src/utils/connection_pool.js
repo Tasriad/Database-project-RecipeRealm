@@ -8,12 +8,12 @@ const pool = createPool({
             password: "12345",
             connectString: "localhost:1521/orclpdbt",
         });
-        console.log('connection created')
+        console.log('connection created');
         return connection;
     },
     destroy: async (connection) => {
         await connection.close();
-        console.log('connection closed')
+        console.log('connection closed');
     }
 });
 

@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image"
-import { images } from "@/constants"
+// import { images } from "@/constants"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -14,6 +14,7 @@ export default function HeadNavBar({ path = '' }) {
     const pathname = usePathname();
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
+    const [image,setImage] = useState('')
     let searchPlaceholder = ''
     if (path.includes('/recipe')) {
         searchPlaceholder = 'Search for recipes'
@@ -38,6 +39,11 @@ export default function HeadNavBar({ path = '' }) {
     }
 
     useEffect(() => {
+        axios.get('/api/cookie_data').then((res)=>{
+            setImage(`/profile_images/${res.data.data.profile_pic}`)
+        }).catch((err)=>{
+            console.log(err)
+        })
         console.log('use effect')
         setSearchQuery('')
         setSearchResults([])
@@ -62,7 +68,6 @@ export default function HeadNavBar({ path = '' }) {
     const handleChange = async (e) => {
         setSearchQuery(e.target.value)
         console.log(searchQuery)
-        console.log("searching for " + searchQuery + " in " + path)
         optimizedChange(e.target.value)
         
     }
@@ -80,7 +85,6 @@ export default function HeadNavBar({ path = '' }) {
     const optimizedChange = useCallback(debounce(setRecipes, 500), []);
     return (
         <>
-            {/* <nav style={{ position: 'sticky', width: 'full', display: 'flex', flexDirection: 'row', flexWrap: 'wrap', backgroundColor: 'AliceBlue', alignItems: 'center' }}> */}
             <nav className="flex shrink flex-initial justify-right bg-gradient-to-tr from-white via-transparent to-black/60">
                 <form className="relative w-2/3 m-2 ml-20 items-right ">
                     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -110,7 +114,7 @@ export default function HeadNavBar({ path = '' }) {
 
                 <div style={{ margin: '10px', zIndex: '10', display: 'inline-block' }}>
                     <Link href="/profile">
-                        <Image loading="lazy" className="border-2 rounded p-1" src={images.avatar} width={50} height={50} alt="logo" />
+                        <Image loading="lazy" className="border-2 rounded p-1" src={(image.includes('null') || image.includes('undefined')) ? '/avatar/profile.png' : image} width={50} height={50} alt="logo" />
                     </Link>
                 </div>
 

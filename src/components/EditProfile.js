@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '@/styles/editProfile.module.css';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -10,9 +13,11 @@ export default function EditProfile() {
 
   // Create state variables to manage form input
   const [formData, setFormData] = useState({
+    user_id:0,
     first_name: '',
     last_name: '',
     emailAddress: '',
+    old_PASSWORD: '',
     PASSWORD: '',
     password_confirmation: '',
     dietaryRestriction: '',
@@ -25,18 +30,24 @@ export default function EditProfile() {
       [name]: value,
     }));
   };
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [avatar, setAvatar] = useState('/avatar/avatar.png');
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add code here to update the user's profile data
-    // You can make an API request to update the user's data
-    // For example: axios.put('/api/update_profile', { firstName, lastName, email });
-    // After successful update, you can redirect the user to their profile page
+    console.log(formData);
     console.log('submitting');
+    axios.post('/api/update_user', formData).then((res) => {
+      console.log(res);
+      if(res.data.success){
+        toast.success('Profile Updated Successfully');
+        router.push('/profile');
+      }
+      else{
+        toast.error('Error Updating Profile');
+      }
+    }).catch((err) => {
+      console.log(err);
+      toast.error('Error Updating Profile');
+    });
     // router.push('/profile');
   };
 
@@ -45,21 +56,23 @@ export default function EditProfile() {
     if (file) {
       // Create a URL for the selected file
       const imageUrl = URL.createObjectURL(file);
-      setAvatar(imageUrl); // Update the avatar image
+      // setAvatar(imageUrl); // Update the avatar image
     }
   };
 
   useEffect(() => {
-    // This code will only run on the client-side
-    // Initialize Bootstrap JavaScript when the component mounts
-    // const script = document.createElement('script');
-    // script.src = 'https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js';
-    // script.async = true;
-    // script.onload = () => {
-    //   // Bootstrap JavaScript has loaded
-    //   // You can safely open the modal here
-    // };
-    // document.body.appendChild(script);
+    axios.get('/api/user_details').then((res) => {
+      setFormData({
+        user_id:res.data.details[0].USER_ID,
+        first_name: res.data.details[0].FIRST_NAME,
+        last_name: res.data.details[0].LAST_NAME,
+        emailAddress: res.data.details[0].EMAIL_ADDRESS,
+        old_PASSWORD: null,
+        PASSWORD: null,
+        password_confirmation: null,
+        dietaryRestriction: res.data.dietaries[0].RESTRICTION,
+      });
+      })
   }, []);
 
   return (
@@ -70,7 +83,7 @@ export default function EditProfile() {
         {/* left column */}
         <div className="col-md-8">
           <div className={`${styles.photoUploadContainer}`}>
-            <img src={avatar} className={`${styles.avatar} ${styles['img-circle']}`} alt="avatar" />
+            {/* <img src={avatar} className={`${styles.avatar} ${styles['img-circle']}`} alt="avatar" /> */}
             <h4 className={`${styles.editProfileHeading}`}>Upload a different photo</h4>
             <input type="file" className={`custom-file-input ${styles.formcontrol}`} onChange={handleFileChange} />
           </div>
@@ -78,41 +91,47 @@ export default function EditProfile() {
         {/* edit form column */}
         <div className="col-md-9 personal-info bg-slate-200" style={{ border: '2px solid black', padding: '40px', borderRadius: '10px' }}>
           <h3 className={`${styles.editProfileHeading}`}>Personal info</h3>
-          <form className="form-horizontal " role="form">
+          <form className="form-horizontal " role="form" onChange={handleChange}>
             <div classname={styles.formgroup}>
               <label className={`col-lg-3 control-label ${styles.editProfileHeading}`}>First name:</label>
               <div className="col-lg-12">
-                <input classname={styles.formcontrol} type="text" defaultValue="Jane" />
+                <input classname={styles.formcontrol} name="first_name" type="text" defaultValue={formData.first_name} />
               </div>
             </div>
             <div classname={styles.formgroup}>
               <label className={`col-lg-3 control-label ${styles.editProfileHeading}`}>Last name:</label>
               <div className="col-lg-12">
-                <input classname={styles.formcontrol} type="text" defaultValue="Bishop" />
+                <input name="last_name" classname={styles.formcontrol} type="text" defaultValue={formData.last_name} />
               </div>
             </div>
             <div classname={styles.formgroup}>
               <label className={`col-lg-3 control-label ${styles.editProfileHeading}`}>Email:</label>
               <div className="col-lg-12">
-                <input classname={styles.formcontrol} type="text" defaultValue="janesemail@gmail.com" />
+                <input name="emailAddress" classname={styles.formcontrol} type="email" defaultValue={formData.emailAddress} />
               </div>
             </div>
             <div classname={styles.formgroup}>
-              <label className={`col-md-3 control-label ${styles.editProfileHeading}`}>Password:</label>
+              <label className={`col-md-3 control-label ${styles.editProfileHeading}`}>Old Password:</label>
               <div className="col-md-12">
-                <input classname={styles.formcontrol} type="password" defaultValue={11111122333} />
+                <input name="old_PASSWORD" classname={styles.formcontrol} type="password" defaultValue={''} placeholder='Enter old pass to verify' />
+              </div>
+            </div>
+            <div classname={styles.formgroup}>
+              <label className={`col-md-3 control-label ${styles.editProfileHeading}`}>New Password:</label>
+              <div className="col-md-12">
+                <input name="PASSWORD" classname={styles.formcontrol} type="password" placeholder='keep blank not to update' />
               </div>
             </div>
             <div classname={styles.formgroup}>
               <label className={`control-label ${styles.editProfileHeading}`}>Confirm Password:</label>
               <div className="col-md-12">
-                <input classname={styles.formcontrol} type="password" defaultValue={11111122333} />
+                <input name="password_confirmation" classname={styles.formcontrol} type="password" placeholder='only if new pass' />
               </div>
             </div>
             <div classname={styles.formgroup}>
               <label className={`control-label ${styles.editProfileHeading}`}>Update Dietary Restriction:</label>
               <div className="col-lg-12">
-                <input classname={styles.formcontrol} type="text" defaultValue="Vegeterian" />
+                <input name="dietaryRestriction" classname={styles.formcontrol} type="text" placeholder='Give Restriction if you have any' />
               </div>
             </div>
             <div className={styles.formgroup}>

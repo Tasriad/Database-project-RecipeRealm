@@ -1,18 +1,14 @@
 'use client'
 import Checkbox from '@mui/material/Checkbox';
-import Image from "next/image"
-import { images } from "@/constants"
 import { useEffect } from 'react';
 import RecipeCard from '@/components/RecipeCard';
 import { useState } from 'react';
 import axios from 'axios';
 import { useCallback } from 'react';
-import Skeleton_viewer from '@/components/Skeleton_viewer';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
 
 
 
@@ -125,20 +121,22 @@ export default function Page() {
 
 
     return (
-        <div className="flex flex-col h-full  items-start w-full">
-            <h1 className="text-2xl text-left font-bold mb-3">
-                <input type="text" className="border-2 border-black rounded-md text-center text-black" placeholder='Title' onChange={(e)=>setTitle(e.target.value)} />
-            </h1>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                    <DatePicker label="Basic date picker" onChange={(date)=>setStartDate(date)} />
-                </DemoContainer>
-            </LocalizationProvider>
-            <h3 className="text-lg mt-3 text-left underline font-bold">
-                <input type='number' className="border-2 border-black rounded-md text-center text-black" placeholder='Duration' onChange={(e)=>setDuration(e.target.value)}/> minutes
-            </h3>
-            <div className="flex flex-row flex-wrap justify-center">
-                <div className="flex flex-col shrink bg-white m-5 overflow-auto">
+        <div className="flex flex-col h-screen bg-white  items-start w-full">
+            <div className='p-3 flex flex-row w-full justify-between flex-wrap border-2 border-black rounded'>
+                <h1 className=" m-auto text-2xl text-left font-bold mb-3">
+                    <input type="text" className="border-2 border-black rounded-md text-center text-black" placeholder='Title' onChange={(e) => setTitle(e.target.value)} />
+                </h1>
+                <LocalizationProvider dateAdapter={AdapterDayjs} className="m-auto">
+                    <DemoContainer components={['DatePicker']}>
+                        <DatePicker label="Basic date picker" onChange={(date) => setStartDate(date)} />
+                    </DemoContainer>
+                </LocalizationProvider>
+                <h3 className=" m-auto text-lg mt-3 text-left underline font-bold">
+                    <input type='number' className="border-2 border-black rounded-md text-center text-black" placeholder='Duration' onChange={(e) => setDuration(e.target.value)} /> minutes
+                </h3>
+            </div>
+            <div className="flex flex-row flex-wrap justify-between w-full">
+                <div className="flex flex-col border-2 rounded p-3 border-black hover:shadow-lg shrink bg-white m-5 overflow-auto">
                     <h1 className="text-2xl font-bold">Breakfast</h1>
                     <input
                         type="search"
@@ -152,14 +150,14 @@ export default function Page() {
                             return (
                                 <div className="flex flex-row flex-wrap justify-center">
                                     <Checkbox checked={BreakfastSet.has(recipe.RECIPE_ID)} name={recipe.RECIPE_ID} onChange={() => handleBreakfastCheckbox(recipe.RECIPE_ID)} />
-                                    <RecipeCard image={'gallery01'} title={recipe.TITLE} publisher={"by- " + recipe.PUBLISHER_NAME} description={recipe.COOKING_INSTRUCTION} recipeID={recipe.RECIPE_ID} />
+                                    <RecipeCard image={`/recipe_images/${recipe.IMAGE}`} title={recipe.TITLE} publisher={"by- " + recipe.PUBLISHER_NAME} description={recipe.COOKING_INSTRUCTION} recipeID={recipe.RECIPE_ID} />
                                 </div>
                             )
 
                         })}
                     </div>
                 </div>
-                <div className="flex flex-col shrink bg-white m-5 overflow-auto">
+                <div className="flex flex-col border-2 rounded p-3 hover:shadow-lg  border-black shrink bg-white m-5 overflow-auto">
                     <h1 className="text-2xl font-bold">Lunch</h1>
                     <input
                         type="search"
@@ -174,14 +172,14 @@ export default function Page() {
                             return (
                                 <div className="flex flex-row flex-wrap justify-center">
                                     <Checkbox checked={LunchSet.has(recipe.RECIPE_ID)} name={recipe.RECIPE_ID} onChange={() => handleLunchCheckbox(recipe.RECIPE_ID)} />
-                                    <RecipeCard image={'gallery01'} title={recipe.TITLE} publisher={"by- " + recipe.PUBLISHER_NAME} description={recipe.COOKING_INSTRUCTION} recipeID={recipe.RECIPE_ID} />
+                                    <RecipeCard image={`/recipe_images/${recipe.IMAGE}`} title={recipe.TITLE} publisher={"by- " + recipe.PUBLISHER_NAME} description={recipe.COOKING_INSTRUCTION} recipeID={recipe.RECIPE_ID} />
                                 </div>
                             )
 
                         })}
                     </div>
                 </div>
-                <div className="flex flex-col bg-white m-5 overflow-auto">
+                <div className="flex flex-col border-2 rounded p-3 hover:shadow-lg border-black bg-white m-5 overflow-auto">
                     <h1 className="text-2xl font-bold">Dinner</h1>
                     <input
                         type="search"
@@ -195,14 +193,17 @@ export default function Page() {
                             return (
                                 <div className="flex flex-row flex-wrap justify-center">
                                     <Checkbox checked={DinnerSet.has(recipe.RECIPE_ID)} name={recipe.RECIPE_ID} onChange={() => handleDinnerCheckbox(recipe.RECIPE_ID)} />
-                                    <RecipeCard image={'gallery01'} title={recipe.TITLE} publisher={"by- " + recipe.PUBLISHER_NAME} description={recipe.COOKING_INSTRUCTION} recipeID={recipe.RECIPE_ID} />
+                                    <RecipeCard image={`/recipe_images/${recipe.IMAGE}`} title={recipe.TITLE} publisher={"by- " + recipe.PUBLISHER_NAME} description={recipe.COOKING_INSTRUCTION} recipeID={recipe.RECIPE_ID} />
                                 </div>
                             )
                         })}
                     </div>
                 </div>
             </div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white w-1/4 font-bold py-2 px-4 rounded" onClick={handleclick}>Save</button>
+            <div className='w-full flex-col flex-wrap items-end'>
+
+                <button className="bg-blue-500 mx-auto hover:bg-blue-700 text-white w-1/4 font-bold py-2 px-4 rounded" onClick={handleclick}>Save</button>
+            </div>
         </div>
 
     )

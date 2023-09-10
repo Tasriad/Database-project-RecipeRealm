@@ -1,9 +1,8 @@
 'use client'
-import { use, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import Checkbox from '@mui/material/Checkbox';
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { Button } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,14 +10,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContentText from '@mui/material/DialogContentText';
 import { toast } from "react-toastify";
 
-function Card({ heading = '', subHeading = '', image = '' }) {
+function Card({ heading = '', subHeading = '', image = '', line = true }) {
     return (
         <div className="flex flex-row flex-wrap hover:bg-gray-500 hover:text-blue-300 border-2 overflow-auto rounded border-black">
             {/* <div className="w-1/4 m-2">
                 <Image width={60} height={60} src={image} />
             </div> */}
             <div className="flex flex-row flex-wrap overflow-auto justify-center">
-                <h1 className="text-2xl font-bold ml-3 mr-3 m-auto">{heading}</h1>
+                <h1 className={`text-2xl font-bold ml-3 mr-3 m-auto decoration-black decoration-double  ${line ? 'line-through' : ''}`}>{heading}</h1>
                 <p className="text-sm italic ml-2 mr-2 m-auto">{subHeading}</p>
             </div>
         </div>
@@ -47,8 +46,6 @@ export default function Shopping() {
             })
     }
     const handlecheck = async (ingredient_id) => {
-        console.log(ingredient_id)
-        console.log(checkedIngredients.has(ingredient_id))
         if (checkedIngredients.has(ingredient_id)) {
             setCheckedIngredients(prev => {
                 prev.delete(ingredient_id);
@@ -60,11 +57,9 @@ export default function Shopping() {
                 prev.add(ingredient_id);
                 return new Set(prev);
             })
-            // setCheckedIngredients(prev => new Set(prev.add(ingredient_id)))
         }
         console.log(checkedIngredients)
     }
-    // const [ingredient_data.current, setIngredient_data] = useState()
     let ingredient_data = useRef(10)
     const showIngredient = async (temp_ingredientid) => {
         try {
@@ -74,8 +69,6 @@ export default function Shopping() {
             ingredient_data.current = data;
             console.log(ingredient_data);
             setOpen(true);
-            // console.log(ingredient_data);
-            // ingredient_data.current = ingredient_data.current + 1;
         } catch (error) {
             console.error(error);
         }
@@ -149,27 +142,27 @@ export default function Shopping() {
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
-            <div className="flex flex-col items-start flex-wrap w-full h-full">
+            <div className="flex flex-col bg-white items-start flex-wrap w-full h-screen">
                 <div className="flex flex-row flex-wrap justify-between">
-                    <Button onClick={handleSave} variant="outlined">
-                        Save Shopping List
+                    <Button onClick={handleSave} variant="outlined" className=" bg-amber-400 hover:bg-red-400">
+                        Shop
                     </Button>
                 </div>
+                <div className="flex mt-3 bg-slate-300 flex-col flex-wrap outline-double items-start w-full">
                 {
                     ingredients?.map(ingredient => {
                         return (
-
-
                             <div className="flex flex-row flex-wrap m-3  justify-center">
                                 <Checkbox checked={checkedIngredients.has(ingredient.INGREDIENT_ID)} onChange={() => { handlecheck(ingredient.INGREDIENT_ID) }} />
                                 <Button onClick={() => { showIngredient(ingredient.INGREDIENT_ID) }} >
-                                    <Card heading={ingredient.NAME} subHeading={"Cal:" + ingredient.CALORIES + " PROTIEN:" + ingredient.PROTEIN + " CARB:" + ingredient.CARBOHYDRATE + " FAT:" + ingredient.FAT + " FIBER:" + ingredient.FIBER} />
+                                    <Card heading={ingredient.NAME} line={checkedIngredients.has(ingredient.INGREDIENT_ID)} />
                                 </Button>
                             </div>
                         )
                     }
                     )
                 }
+                </div>
             </div>
         </>
     )

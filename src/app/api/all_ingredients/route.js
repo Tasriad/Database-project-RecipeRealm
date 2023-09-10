@@ -1,5 +1,5 @@
 import { NextResponse,NextRequest } from "next/server";
-import runQuery from "@/utils/database_manager";
+import runQuery from "@/utils/database_manager.js";
 
 export async function GET(request)
 {

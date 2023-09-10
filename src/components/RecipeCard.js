@@ -1,22 +1,16 @@
 'use client'
-
-'use client'
-import {MdOutlineMonitorHeart} from "react-icons/md"
 import * as React from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Image from "next/image"
-import { images } from "@/constants"
-import { usePathname } from "next/navigation"
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from "next/link";
 
-export default function RecipeCard({ recipeID = '',publisher='test', rating = 5, title = "test", description = "test",baseLink = '/recipe', image = 'gallery01' }) {
+export default function RecipeCard({ recipeID = '',publisher='test', rating = 0, title = "test", description = "test",baseLink = '/recipe', image = '' }) {
 
     const router = useRouter();
     if(title?.length>18)
@@ -31,12 +25,15 @@ export default function RecipeCard({ recipeID = '',publisher='test', rating = 5,
     const handleClick = () => {
         setIsLoading(true);
     }
+    console.log(image)
     return (
         <div className='min-w-fit max-h-fit min-h-fit max-w-fit m-2'>
             <Link href={baseLink + '/' + recipeID} onClick={handleClick}>
             <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
-                    <Image src={images.gallery01} alt="logo" />
+                    <div className='relative flex flex-row justify-center w-full h-full items-center'>
+                    <Image src={(image.includes('null')||image.includes('undefined'))?'/avatar/empty.png':image} width={100} height={200} alt="logo" />
+                    </div>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
                             {title}

@@ -8,16 +8,6 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import Skeleton_viewer from "@/components/Skeleton_viewer"
 
-function PaperComponent(props) {
-    return (
-        <Draggable
-            handle="#draggable-dialog-title"
-            cancel={'[class*="MuiDialogContent-root"]'}
-        >
-            <Paper {...props} />
-        </Draggable>
-    );
-}
 
 const fetcher = (url) => axios.get(url).then((res) => res.data).catch((err) => toast.error(err.message))
 
@@ -63,7 +53,7 @@ export default function SearchPage() {
                         data?.recipes?.map((recipe, index) => {
                             return (
                                 <Link key={index} href={`/recipe/${recipe.RECIPE_ID}`}>
-                                    <SearchItems heading={recipe.TITLE} subHeading={recipe.PUBLISHER_NAME} image={images.gallery01} />
+                                    <SearchItems heading={recipe.TITLE} subHeading={recipe.PUBLISHER_NAME} image={`/recipe_images/${recipe.IMAGE}`} />
                                 </Link>
                             )
                         })}
@@ -76,7 +66,7 @@ export default function SearchPage() {
                         data?.profiles?.map((profile, index) => {
                             return (
                                 <Link key={index} href={`/profile/${profile.USER_ID}`}>
-                                    <SearchItems heading={profile.NAME} subHeading={'Follower: ' + profile.FOLLOWERS} image={images.avatar} />
+                                    <SearchItems heading={profile.NAME} subHeading={'Follower: ' + profile.FOLLOWERS} image={`/profile_images/${profile.PROFILE_PICTURE}`} />
                                 </Link>
                             )
                         })}

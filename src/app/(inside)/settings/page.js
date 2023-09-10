@@ -6,7 +6,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import EditProfile from "@/components/EditProfile";
-import EditRecipe from "@/components/EditRecipe";
+import CreateRecipe from "@/components/CreateRecipe";
 
 
 export default function Page() {
@@ -26,13 +26,13 @@ export default function Page() {
           </Box>
         </div>
         <TabPanel value="1">
-            <div className='flex flex-col items-center justify-center w-full bg-red-500 mt-10'>
+            <div className='flex flex-col items-center justify-center w-full bg-white mt-10'>
                 <EditProfile/>
             </div>
         </TabPanel>
         <TabPanel value="2">
             <div className='flex flex-col items-center justify-center mt-10'>
-                <EditRecipe />
+                <CreateRecipe />
             </div>
         </TabPanel>
       </TabContext>

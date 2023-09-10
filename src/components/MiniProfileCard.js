@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { images } from "@/constants";
 import {
     Card,
     CardHeader,
@@ -15,26 +14,27 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ProfileCard({ name='',email='',userID='' , baseLink = '/profile', image = 'avatar' }) {
+export default function ProfileCard({ name = '', email = '', userID = '', baseLink = '/profile', image = '' }) {
 
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const handleClick = () => {
         setIsLoading(true);
     }
+    console.log(image)
     return (
-      <div >
-        <Card className="relative max-w-[16rem] max-h-[18rem] ">
-            <CardHeader floated={false} color="blue-gray" className="relative flex flex-row justify-center bg-transparent">
-                <Image loading="lazy" className="object-cover m-1" width={50} height={50} src={images[`${image}`]} alt="ui/ux review check"
-                />
-            </CardHeader>
-            <CardBody>
-                <div className="mb-3 h-full flex items-center justify-between">
-                    <Typography variant="h5" color="blue-gray" className="text-3xl">
-                        {name}
-                    </Typography>
-                    {/* <Typography
+        <div >
+            <Card className="relative max-w-[16rem] max-h-[18rem] ">
+                <CardHeader floated={false} color="blue-gray" className="relative flex flex-row justify-center bg-transparent">
+                    <Image loading="lazy" className="object-cover m-1" width={50} height={50} src={(image.includes('null') || image.includes('undefined')) ? '/avatar/profile.png' : image} alt="ui/ux review check"
+                    />
+                </CardHeader>
+                <CardBody>
+                    <div className="mb-3 h-full flex items-center justify-between">
+                        <Typography variant="h5" color="blue-gray" className="text-3xl">
+                            {name}
+                        </Typography>
+                        {/* <Typography
                         color="blue-gray"
                         className="flex items-center gap-1.5 font-normal"
                     >
@@ -52,20 +52,20 @@ export default function ProfileCard({ name='',email='',userID='' , baseLink = '/
                         </svg>
                         {rating}
                     </Typography> */}
-                </div>
-                <Typography color="gray" className="italic">
-                    {email}
-                </Typography>
-            </CardBody>
-            <CardFooter className="pt-3">
-                <Link href={baseLink + '/' + userID}>
-                    <Button onClick={handleClick} className="hover:bg-blue-400 h-full" size="lg" fullWidth={true} style={{ maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
-                        View Full Profile
-                    </Button>
-                </Link>
-                {isLoading ? <div className="m-3"><LinearProgress /></div> : ""}
-            </CardFooter>
-        </Card>
+                    </div>
+                    <Typography color="gray" className="italic">
+                        {email}
+                    </Typography>
+                </CardBody>
+                <CardFooter className="pt-3">
+                    <Link href={baseLink + '/' + userID}>
+                        <Button onClick={handleClick} className="hover:bg-blue-400 h-full" size="lg" fullWidth={true} style={{ maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}>
+                            View Full Profile
+                        </Button>
+                    </Link>
+                    {isLoading ? <div className="m-3"><LinearProgress /></div> : ""}
+                </CardFooter>
+            </Card>
         </div>
     );
 }
