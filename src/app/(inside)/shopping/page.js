@@ -142,8 +142,8 @@ export default function Shopping() {
                     </DialogContentText>
                 </DialogContent>
             </Dialog>
-            <div className="flex flex-col bg-white items-start flex-wrap w-full h-screen">
-                <div className="flex flex-row flex-wrap justify-between">
+            <div className="flex flex-col bg-white items-start w-full h-screen">
+                <div className="flex m-5 flex-row flex-wrap justify-between">
                     <Button onClick={handleSave} variant="outlined" className=" bg-amber-400 hover:bg-red-400">
                         Shop
                     </Button>

@@ -88,7 +88,7 @@ export default function CreateRecipe() {
                                 <div className={`${styles.photoUploadContainer}`}>
                                     <Image loading='lazy' src={images.avatar} width={30} height={30} className={`${styles.avatar} ${styles['img-circle']}`} alt="avatar" />
                                     <h4 className={`${styles.editProfileHeading}`}>Upload a different photo</h4>
-                                    <input type="file" className={`custom-file-input ${styles.formcontrol}`} onChange={handleFileChange} />
+                                    <input type="file" className={`custom-file-input ${styles.formcontrol}`} onChange={(e)=>setFile(e.target.files?.[0])} />
                                 </div>
                             </div>
                             {/* edit form column */}

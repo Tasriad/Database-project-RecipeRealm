@@ -36,11 +36,6 @@ function SideNavbar() {
         link: "/mealplan"
       },
       {
-        name: "Messages",
-        icon: <BiMessageSquareDots className="text-2xl text-gray-600 group-hover:text-white " />,
-        link: "/messages"
-      },
-      {
         name: "Shopping List",
         icon: <MdOutlineShoppingCart className="text-2xl text-gray-600 group-hover:text-white " />,
         link: "/shopping"
@@ -48,7 +43,7 @@ function SideNavbar() {
       {
         name: "Notifications",
         icon: <MdOutlineNotificationsActive className="text-2xl text-gray-600 group-hover:text-white " />,
-        link: "/home"
+        link: "/notification"
       }
     ]
   const logout = () => {

@@ -9,7 +9,7 @@ export async function GET(request) {
         return NextResponse.json({ message: "No token", succss: false }, { status: 200 });
     }
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-    const id = 236
+    const id = decoded.id
     try {
         const query = `
             BEGIN 

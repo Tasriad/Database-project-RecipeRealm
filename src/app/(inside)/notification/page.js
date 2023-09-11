@@ -4,7 +4,7 @@ import axios from "axios";
 
 const fetcher = (url) => axios.get(url).then((res) => res.data).catch((err) => console.log(err));
 
-const NotificationCard = ({ notification }) => {
+const NotificationCard = ({ message = '', date = '' }) => {
     const cardStyles = {
         background: 'linear-gradient(to bottom, #FFD700, #FFA500)', // Golden gradient
     };
@@ -12,19 +12,18 @@ const NotificationCard = ({ notification }) => {
     return (
         <div
             style={cardStyles}
-            className="shadow-lg p-4 rounded-lg mb-4 w-full transition-transform transform hover:scale-105"
+            className="shadow-lg p-4 flex flex-row justify-between rounded-lg mb-4 w-full transition-transform transform hover:scale-105"
         >
-            <h2 className="text-xl font-semibold">{notification.title}</h2>
-            <p className="text-gray-600">{notification.message}</p>
+            <p className="text-gray-600">{message}</p>
+            <p className="text-gray-600 italic text-base">{date}</p>
         </div>
     );
 };
 
-export default NotificationPage()
-{
+export default function NotificationPage() {
     const { data, error } = useSWR("/api/get_notifications", fetcher);
     return (
-        <div className="flex flex-col items-start justify-center min-h-screen py-2">
+        <div className="flex flex-col items-start justify-start min-h-screen py-2">
             <h1 className="text-4xl font-bold">Notifications</h1>
             {
                 data?.notifications?.map((notification) => (
@@ -37,7 +36,7 @@ export default NotificationPage()
                                 <NotificationCard notification={notification} />
                             </Link>)
                             :
-                            (<NotificationCard notification={notification} />)))
+                            (<NotificationCard message={notification.MESSAGE} date={notification.CREATED_AT} />)))
             }
         </div>
     )
