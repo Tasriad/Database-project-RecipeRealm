@@ -75,7 +75,7 @@ export default function Home() {
               <ul className="relative flex flex-row max-w-6xl max-h-fit overflow-x-auto ">
                 {data?.following?.map((user, index) => (
                   <li>
-                    <ProfileCard name={user.NAME} email={user.EMAIL_ADDRESS} image={`/profile_images/${user.PROFILE_PICTURE}`} />
+                    <ProfileCard name={user.NAME} email={user.EMAIL_ADDRESS} image={`/profile_images/${user.PROFILE_PICTURE}`} userID={user.FOLLOWING_ID}/>
                   </li>
                 ))}
               </ul>

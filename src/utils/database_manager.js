@@ -8,9 +8,7 @@ export default async function runQuery(query, commit, binds = {}) {
     const connection = await pool.acquire();
     try {
         const result = await connection.execute(query, binds, { outFormat: OracleDB.OUT_FORMAT_OBJECT });
-        if (commit) {
-            await connection.commit();
-        }
+        await connection.commit();
         return result;
     } catch (err) {
         console.error(err);

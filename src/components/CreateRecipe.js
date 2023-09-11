@@ -18,6 +18,7 @@ const fetcher = (path) => axios(path).then(res => res.data).catch((error) => {
 
 export default function CreateRecipe() {
     const router = useRouter();
+    const [file, setFile] = useState(null); // State to store uploaded file
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     const [title, setTitle] = useState('');
     const [cookingTime, setCookingTime] = useState(0);
@@ -44,46 +45,33 @@ export default function CreateRecipe() {
     // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // router.push('/profile');
-        console.log('submitting');
-        console.log(selectedCategories)
-        console.log(selectedIngredients)
-        console.log(selectedTags)
-        console.log(title)
-        console.log(cookingTime)
-        console.log(preparationTime)
-        console.log(instructions)
-        //post to api
-        axios.post('/api/recipe_create', {
-            title: title,
-            cookingTime: cookingTime,
-            preparationTime: preparationTime,
-            instructions: instructions,
-            selectedCategories: selectedCategories.map((category) => category.value),
-            selectedIngredients: selectedIngredients.map((ingredient) => ingredient.value),
-            selectedTags: selectedTags.map((tag) => tag.value)
-        }).then((res) => {
-            console.log(res);
-            if (res.data.success) {
-                toast.success('Recipe Created Successfully');
-                router.push('/profile');
-            }
-            else {
-                toast.error('Error Creating Recipe');
-            }
-        }).catch((err) => {
-            console.log(err);
-            toast.error('Error Creating Recipe');
+        if (!file) {
+            toast.error('Please select a file');
+            return;
         }
-        );
-    };
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // Create a URL for the selected file
-            const imageUrl = URL.createObjectURL(file);
-            setAvatar(imageUrl); // Update the avatar image
+        try {
+            const data = new FormData();
+            data.set('file', file);
+            data.set('title', title);
+            data.set('cookingTime', cookingTime);
+            data.set('preparationTime', preparationTime);
+            data.set('instructions', instructions);
+            data.set('selectedCategories', selectedCategories.map((category) => category.value));
+            data.set('selectedIngredients', selectedIngredients.map((ingredient) => ingredient.value));
+            data.set('selectedTags', selectedTags.map((tag) => tag.value));
+            const res = await fetch('/api/recipe_create', {
+                method: 'POST',
+                body: data,
+            });
+            if (!res.ok) {
+                throw new Error(await res.text());
+            }
+            toast.success('Upload successful')
+            router.push('/profile')
+        }
+        catch (err) {
+            console.log(err);
+            toast.error("Error uploading image");
         }
     };
 

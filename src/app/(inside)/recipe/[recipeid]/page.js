@@ -44,14 +44,18 @@ function extractVideoId(videoLink) {
 export default function page({ params }) {
     const router = useRouter()
     const [open, setOpen] = useState(false)
-    const [isFavorite, setIsFavorite] = useState(false)
+    const [isFavorite, setIsFavorite] = useState(null)
     const [comment, setComment] = useState('')
     const [rating, setRating] = useState('5')
     const recipeid = params.recipeid
     const { data: recipe_data, error: recipe_error } = useSWR(`/api/recipe_details?id=${recipeid}`, fetcher)
-    if (recipe_data && isFavorite === null) {
-        setIsFavorite(recipe_data.isFav)
+    if (recipe_data) {
+        if (isFavorite === null) {
+            setIsFavorite(recipe_data.isFav)
+            console.log('is fav? ' + recipe_data.isFav)
+        }
     }
+    console.log('is fav? ' + isFavorite)
     if (recipe_error) {
         console.log(recipe_error)
         toast.error(recipe_error.message)
@@ -84,9 +88,35 @@ export default function page({ params }) {
     const setFav = (is_fav) => {
         if (is_fav) {
             console.log('add')
+            axios.post('/api/set_fav', {
+                recipe_id: recipeid
+            }).then((res) => {
+                console.log(res.data)
+                if (res.data.success) {
+                    toast.success('Recipe added to favorites')
+                }
+                else {
+                    throw new Error(res.data.message)
+                }
+            }).catch((e) => {
+                toast.error(e.message)
+            })
         }
         else {
             console.log('remove')
+            axios.post('/api/remove_fav', {
+                recipe_id: recipeid
+            }).then((res) => {
+                console.log(res.data)
+                if (res.data.success) {
+                    toast.success('Recipe removed from favorites')
+                }
+                else {
+                    throw new Error(res.data.message)
+                }
+            }).catch((e) => {
+                toast.error(e.message)
+            })
         }
     }
     const debouncedSetFav = useCallback(debounce(setFav, 500), [])
@@ -117,11 +147,27 @@ export default function page({ params }) {
     const submitReview = () => {
         handleClickreviewClose()
         console.log(comment, rating)
-        router.refresh()
+        axios.post('/api/add_review', {
+            recipe_id: recipeid,
+            comment: comment,
+            rating: rating
+        }).then((res) => {
+            console.log(res.data)
+            if (res.data.success) {
+                toast.success('Review added')
+                router.refresh()
+            }
+            else {
+                throw new Error(res.data.message)
+            }
+        }).catch((e) => {
+            toast.error(e.message)
+        })
+
     }
     const handleDelete = () => {
         axios.post('/api/recipe_delete', {
-            recipe_id: recipe_data.recipes[0]?.RECIPE_ID
+            recipe_id: recipe_data?.recipes[0]?.RECIPE_ID
         }).then((res) => {
             console.log(res.data)
             if (res.data.success) {
@@ -198,7 +244,6 @@ export default function page({ params }) {
                                     height="0"
                                     sizes="100vw"
                                     className="w-full h-auto" alt="logo" />
-                                {/* images to be added */}
                             </div>
                             <div className="flex p-2 shrink flex-col justify-start w-full">
                                 <h1 className="text-3xl font-bold">{recipe_data.recipes[0]?.TITLE}</h1>
@@ -220,8 +265,8 @@ export default function page({ params }) {
                                         <DateRangeIcon />
                                         {recipe_data.recipes[0]?.MODIFICATION_DATE ? recipe_data.recipes[0]?.MODIFICATION_DATE : recipe_data.recipes[0]?.CREATION_DATE}</h1>
                                     <h1 className=" text-base italic m-auto">
-                                    <StarBorderPurple500SharpIcon className=" bg-yellow-500" /> 
-                                    Rating: {recipe_data.recipes[0]?.RATING}
+                                        <StarBorderPurple500SharpIcon className=" bg-yellow-500" />
+                                        Rating: {recipe_data.recipes[0]?.RATING}
                                     </h1>
                                     <Button onClick={addFav} className='inline mr-2 m-auto' endIcon={isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}>
                                         Add Favorite
@@ -235,15 +280,13 @@ export default function page({ params }) {
                                         Tags:
                                     </h1>
                                     <ul className="flex flex-row justify-center flex-wrap">
-                                        {
-                                            recipe_data?.tags?.map((tag) => (
-                                                <li className=" ml-1 mr-1">
-                                                    <Tooltip title={tag.DESCRIPTION} arrow>
-                                                        {tag.NAME}
-                                                    </Tooltip>
-                                                </li>
-                                            ))
-                                        }
+                                        {recipe_data?.tags?.map((tag) => (
+                                            <li className="ml-1 mr-1 group">
+                                                <Tooltip title={tag.DESCRIPTION} arrow>
+                                                    <span className="group-hover:bg-yellow-400">{tag.NAME}</span>
+                                                </Tooltip>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                                 <div className="flex flex-row justify-between mt-5 hover:shadow rounded w-full flex-wrap">
@@ -259,18 +302,19 @@ export default function page({ params }) {
                                             }
                                         </ul>
                                     </div>
-                                    <div className=" flex-wrap flex flex-col justify-center w-1/2 items-end ">
+                                    <div className="flex-wrap flex flex-col justify-center w-1/2 items-end">
                                         <h1 className="text-2xl underline font-bold">INGREDIENTS</h1>
                                         <ul className="flex flex-col flex-wrap shrink" style={{ listStyleType: "disc" }}>
-                                            {
-                                                recipe_data.ingredients?.map((ingredient) => (
-                                                    <li className=" mr-1" >
-                                                        <button onClick={() => showIngredient(ingredient.INGREDIENT_ID)} >
-                                                            {ingredient.NAME}
-                                                        </button>
-                                                    </li>
-                                                ))
-                                            }
+                                            {recipe_data.ingredients?.map((ingredient) => (
+                                                <li className="mr-1 group">
+                                                    <button
+                                                        onClick={() => showIngredient(ingredient.INGREDIENT_ID)}
+                                                        className="group-hover:text-yellow-600"
+                                                    >
+                                                        {ingredient.NAME}
+                                                    </button>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </div>
                                 </div>

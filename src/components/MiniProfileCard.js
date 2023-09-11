@@ -21,12 +21,11 @@ export default function ProfileCard({ name = '', email = '', userID = '', baseLi
     const handleClick = () => {
         setIsLoading(true);
     }
-    console.log(image)
     return (
         <div >
             <Card className="relative max-w-[16rem] max-h-[18rem] ">
                 <CardHeader floated={false} color="blue-gray" className="relative flex flex-row justify-center bg-transparent">
-                    <Image loading="lazy" className="object-cover m-1" width={50} height={50} src={(image.includes('null') || image.includes('undefined')) ? '/avatar/profile.png' : image} alt="ui/ux review check"
+                    <Image loading="lazy" className="object-cover m-1" width={100} height={100} src={(image.includes('null') || image.includes('undefined')) ? '/avatar/profile.png' : image} alt="ui/ux review check" style={{borderRadius:'50%'}}
                     />
                 </CardHeader>
                 <CardBody>

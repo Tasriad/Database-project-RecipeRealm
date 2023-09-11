@@ -22,6 +22,11 @@ export const config = {
     matcher: [
         '/',
         '/profile/:path*',
+        '/recipe/:path*',
+        '/shopping/:path*',
+        '/mealplan/:path*',
+        '/search/:path*',
+        '/settings/:path*',
         '/login',
         '/signup',
     ]

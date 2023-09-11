@@ -20,17 +20,19 @@ export async function GET(request) {
         }
         const query = `
         BEGIN
-        USER_INFO(:ID,:STATUS,:DETAILS,:FOLLOWING,:DIETARY,:FAV_RECIPE,:CREATED_RECIPE,:MP_CR);
+        USER_INFO(:ID,:logid,:STATUS,:DETAILS,:FOLLOWING,:DIETARY,:FAV_RECIPE,:CREATED_RECIPE,:MP_CR,:doesFollow);
         END;`;
         const binds = {
             ID: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: userId },
+            logid: { dir: oracledb.BIND_IN, type: oracledb.NUMBER, val: decoded.id },
             STATUS: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 40 },
             DETAILS: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             FOLLOWING: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             DIETARY: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             FAV_RECIPE: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
             CREATED_RECIPE: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
-            MP_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
+            MP_CR: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+            doesFollow: { dir: oracledb.BIND_OUT, type: oracledb.STRING }
         }
         const result = await runQuery(query, false, binds);
         if (result.outBinds.STATUS !== "SUCCESSFUL") {
@@ -82,6 +84,7 @@ export async function GET(request) {
             success: true,
             loggedin: decoded.id,
             details: details,
+            doesFollow:(result.outBinds.doesFollow?.toLowerCase?.() === 'true'),
             following: followings,
             dietaries: dietaries,
             created_recipes: createds,

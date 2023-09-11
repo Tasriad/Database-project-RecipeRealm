@@ -10,10 +10,10 @@ import { toast } from 'react-toastify';
 
 export default function EditProfile() {
   const router = useRouter();
-
-  // Create state variables to manage form input
+  const [avatar, setAvatar] = useState('');
+  const [file, setFile] = useState (null); // State to store uploaded file
   const [formData, setFormData] = useState({
-    user_id:0,
+    user_id: 0,
     first_name: '',
     last_name: '',
     emailAddress: '',
@@ -30,6 +30,31 @@ export default function EditProfile() {
       [name]: value,
     }));
   };
+  const onFileSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) {
+      toast.error('Please select a file');
+      return;
+    }
+    try {
+      const data = new FormData();
+      data.set('file', file);
+      data.set('user_id', formData.user_id)
+      const res = await fetch('/api/upload_profile_image', {
+        method: 'POST',
+        body: data,
+      });
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+      toast.success('Upload successful')
+      router.push('/profile')
+    }
+    catch (err) {
+      console.log(err);
+      toast.error("Error uploading image");
+    }
+  };
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,11 +62,11 @@ export default function EditProfile() {
     console.log('submitting');
     axios.post('/api/update_user', formData).then((res) => {
       console.log(res);
-      if(res.data.success){
+      if (res.data.success) {
         toast.success('Profile Updated Successfully');
         router.push('/profile');
       }
-      else{
+      else {
         toast.error('Error Updating Profile');
       }
     }).catch((err) => {
@@ -51,19 +76,12 @@ export default function EditProfile() {
     // router.push('/profile');
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Create a URL for the selected file
-      const imageUrl = URL.createObjectURL(file);
-      // setAvatar(imageUrl); // Update the avatar image
-    }
-  };
 
   useEffect(() => {
     axios.get('/api/user_details').then((res) => {
+      setAvatar(`/profile_images/${res.data.details[0]?.PROFILE_PICTURE}`)
       setFormData({
-        user_id:res.data.details[0].USER_ID,
+        user_id: res.data.details[0].USER_ID,
         first_name: res.data.details[0].FIRST_NAME,
         last_name: res.data.details[0].LAST_NAME,
         emailAddress: res.data.details[0].EMAIL_ADDRESS,
@@ -72,7 +90,7 @@ export default function EditProfile() {
         password_confirmation: null,
         dietaryRestriction: res.data.dietaries[0].RESTRICTION,
       });
-      })
+    })
   }, []);
 
   return (
@@ -83,9 +101,12 @@ export default function EditProfile() {
         {/* left column */}
         <div className="col-md-8">
           <div className={`${styles.photoUploadContainer}`}>
-            {/* <img src={avatar} className={`${styles.avatar} ${styles['img-circle']}`} alt="avatar" /> */}
+            <img src={avatar} className={`${styles.avatar} ${styles['img-circle']}`} alt="avatar" />
             <h4 className={`${styles.editProfileHeading}`}>Upload a different photo</h4>
-            <input type="file" className={`custom-file-input ${styles.formcontrol}`} onChange={handleFileChange} />
+            <form onSubmit={onFileSubmit}>
+              <input type="file" name='file' className={`custom-file-input ${styles.formcontrol}`} onChange={(e)=>setFile(e.target.files?.[0])} />
+              <input type="submit" className={`btn btn-primary ${styles.btnprimary}`} value="Upload" />
+            </form>
           </div>
         </div>
         {/* edit form column */}

@@ -10,8 +10,7 @@ export async function POST(request) {
         const token = request.cookies.get('current_user')?.value || ''
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
         const user_id = decoded.id;
-        console.log(user_id,recipe_id)
-        const query = `INSERT INTO favourite (user_id, recipe_id) VALUES (${user_id}, ${recipe_id})`
+        const query = `DELETE FROM favourite WHERE user_id = ${user_id} AND recipe_id = ${recipe_id}`
         const result = await runQuery(query, true, {});
         return NextResponse.json({ message: 'success', success: true }, { status: 200 })
     } catch (error) {

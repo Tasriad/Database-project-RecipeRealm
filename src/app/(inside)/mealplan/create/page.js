@@ -10,8 +10,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-
-
 export default function Page() {
     const [Breakfast_recipes, setBreakfast_recipes] = useState([])
     const [Lunch_recipes, setLunch_recipes] = useState([])
@@ -101,10 +99,6 @@ export default function Page() {
         })
     }, [])
     const handleclick = () => {
-        console.log(BreakfastSet)
-        console.log(LunchSet)
-        console.log(DinnerSet)
-        console.log(startDate.$d)
         axios.post('/api/create_mealplan', {
             title: title,
             duration: duration,
@@ -132,7 +126,7 @@ export default function Page() {
                     </DemoContainer>
                 </LocalizationProvider>
                 <h3 className=" m-auto text-lg mt-3 text-left underline font-bold">
-                    <input type='number' className="border-2 border-black rounded-md text-center text-black" placeholder='Duration' onChange={(e) => setDuration(e.target.value)} /> minutes
+                    <input type='number' className="border-2 border-black rounded-md text-center text-black" placeholder='Duration' onChange={(e) => setDuration(e.target.value)} /> Days
                 </h3>
             </div>
             <div className="flex flex-row flex-wrap justify-between w-full">

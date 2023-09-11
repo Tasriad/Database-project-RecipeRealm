@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image"
 // import { images } from "@/constants"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import axios from "axios"
@@ -9,20 +9,21 @@ import { usePathname } from "next/navigation"
 import { useCallback } from "react"
 
 
-export default function HeadNavBar({ path = '' }) {
+export default function HeadNavBar() {
     const router = useRouter()
     const pathname = usePathname();
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
+    const path = useRef('')
     const [image,setImage] = useState('')
     let searchPlaceholder = ''
-    if (path.includes('/recipe')) {
+    if (pathname.includes('/recipe')) {
         searchPlaceholder = 'Search for recipes'
-        path = '/recipe'
+        path.current  = '/recipe'
     }
-    else if (path.includes('/profile')) {
+    else if (pathname.includes('/profile')) {
         searchPlaceholder = 'Search for users'
-        path = '/profile'
+        path.current  = '/profile'
     }
     const handleLink = (e) => {
         e.preventDefault()
@@ -51,11 +52,11 @@ export default function HeadNavBar({ path = '' }) {
     }, [pathname])
 
     const setRecipes = async (search_query) => {
-        if (path.includes('/recipe')) {
+        if (pathname.includes('/recipe')) {
             // search for recipes
             setSearchResults(await (await axios.get(`/api/search_items?search_type=recipes&search_query=${search_query}&row_num=5`)).data.recipes)
         }
-        else if (path.includes('/profile')) {
+        else if (pathname.includes('/profile')) {
             // search for profiles
             setSearchResults(await (await axios.get(`/api/search_items?search_type=profiles&search_query=${search_query}&row_num=5`)).data.profiles)
         }
@@ -98,8 +99,17 @@ export default function HeadNavBar({ path = '' }) {
                         <div className="absolute bg-white z-50  max-h-40 overflow-auto w-full border-2 rounded border-black">
                             {
                                 searchResults?.map((result) => {
+                                    if(path.current == '/profile')
                                     return (
-                                        <Link href={path + '/' + (result.USER_ID ? result.USER_ID : result.RECIPE_ID)} onclick={handleLink}>
+                                        <Link href={'/profile/'+result.USER_ID} onclick={handleLink}>
+                                            <div className="flex flex-col flex-wrap hover:bg-blue-200 ">
+                                                <h1 className="text-2xl m-auto">{result.NAME ? result.NAME : result.TITLE}</h1>
+                                            </div>
+                                        </Link>
+                                    )
+                                    else if(path.current =='/recipe')
+                                    return(
+                                        <Link href={'/recipe/'+result.RECIPE_ID} onclick={handleLink}>
                                             <div className="flex flex-col flex-wrap hover:bg-blue-200 ">
                                                 <h1 className="text-2xl m-auto">{result.NAME ? result.NAME : result.TITLE}</h1>
                                             </div>
