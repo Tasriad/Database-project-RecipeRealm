@@ -2,15 +2,14 @@
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
 import Link from 'next/link';
-import useSWR, { preload } from 'swr';
+import useSWR from 'swr';
 import axios from 'axios';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from "@mui/material"
-import Dialog from '@mui/material';
-import DialogTitle from '@mui/material';
-import DialogContent from '@mui/material';
-import DialogActions from '@mui/material';
-import DialogContentText from '@mui/material';
+import { Dialog } from '@mui/material';
+import { DialogTitle } from '@mui/material';
+import { DialogContent } from '@mui/material';
+import { DialogContentText } from '@mui/material';
 
 const fetcher = (url) => axios.get(url).then((res) => res.data).catch((err) => console.log(err))
 
@@ -52,7 +51,7 @@ export default function MealPlan() {
                             <div className='flex flex-row flex-wrap'>
                                 <h2 className='text-center text-xl font-semibold'>Breakfast</h2>
                                 <div className='flex flex-col overflow-auto w-full h-20'>
-                                    {mealplan_data.data.map((meal) => {
+                                    {mealplan_data?.data.map((meal) => {
                                         if (meal.MEAL_SLOT === 'Breakfast') {
                                             return (
                                                 <Link href={'recipe/' + meal.RECIPE_ID}>
@@ -67,7 +66,7 @@ export default function MealPlan() {
                             <div className='flex flex-row flex-wrap'>
                                 <h2 className='text-center text-xl font-semibold'>Lunch</h2>
                                 <div className='flex flex-col overflow-auto w-full h-20'>
-                                    {mealplan_data.data.map((meal) => {
+                                    {mealplan_data?.data.map((meal) => {
                                         if (meal.MEAL_SLOT === 'Lunch') {
                                             return (
                                                 <Link href={'recipe/' + meal.RECIPE_ID}>
@@ -81,7 +80,7 @@ export default function MealPlan() {
                             <div className='flex flex-row flex-wrap'>
                                 <h2 className='text-center text-xl font-semibold'>Dinner</h2>
                                 <div className='flex flex-col overflow-auto w-full h-20'>
-                                    {mealplan_data.data.map((meal) => {
+                                    {mealplan_data?.data.map((meal) => {
                                         if (meal.MEAL_SLOT === 'Dinner') {
                                             return (
                                                 <Link href={'recipe/' + meal.RECIPE_ID}>
@@ -104,7 +103,7 @@ export default function MealPlan() {
                             mealplans?.data?.map((mealplan) => {
                                 return (
                                     <li className='h-full m-'>
-                                        < button onClick={() => show_mealplan(mealplan.PLAN_ID)}>
+                                        <Button onClick={() => show_mealplan(mealplan.PLAN_ID)}>
                                             <div className='border-2 flex flex-row rounded-md border-black  h-full'>
                                                 <h1 className='m-auto text-left w-1/2 text-xl font-semibold'>{mealplan.PLAN_NAME}</h1>
                                                 <div className='m-auto flex flex-col justify-center'>
@@ -112,7 +111,7 @@ export default function MealPlan() {
                                                     <h3 className='text-right'>{mealplan.DURATION}</h3>
                                                 </div>
                                             </div>
-                                        </button>
+                                        </Button>
                                     </li>
                                 )
                             })

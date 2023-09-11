@@ -5,21 +5,19 @@ import RecipeCard from '@/components/RecipeCard';
 import { useState } from 'react';
 import axios from 'axios';
 import { useCallback } from 'react';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import { toast } from 'react-toastify';
 
 export default function Page() {
     const [Breakfast_recipes, setBreakfast_recipes] = useState([])
     const [Lunch_recipes, setLunch_recipes] = useState([])
     const [Dinner_recipes, setDinner_recipes] = useState([])
     const [BreakfastSet, setBreakfastSet] = useState(new Set())
+    const [allowed_recipes, setAllowed_recipes] = useState(null);
     const [LunchSet, setLunchSet] = useState(new Set())
     const [DinnerSet, setDinnerSet] = useState(new Set())
     const [title, setTitle] = useState('')
     const [duration, setDuration] = useState('')
-    const [startDate, setStartDate] = useState(new Date());
     const debounce = (func, delay) => {
         let timer;
         return function (...args) {
@@ -61,6 +59,10 @@ export default function Page() {
             })
         }
         else {
+            const allowed_ids = allowed_recipes.map((recipe)=>recipe.RECIPE_ID)
+            if(!allowed_ids.includes(recipeID)){
+                toast.warning('Your dietry restriction forbids this recipe.')
+            }
             setBreakfastSet(prev => new Set(prev.add(recipeID)))
         }
     }
@@ -72,6 +74,10 @@ export default function Page() {
             })
         }
         else {
+            const allowed_ids = allowed_recipes.map((recipe)=>recipe.RECIPE_ID)
+            if(!allowed_ids.includes(recipeID)){
+                toast.warning('Your dietry restriction forbids this recipe.')
+            }
             setLunchSet(prev => new Set(prev.add(recipeID)))
         }
     }
@@ -83,6 +89,10 @@ export default function Page() {
             })
         }
         else {
+            const allowed_ids = allowed_recipes.map((recipe)=>recipe.RECIPE_ID)
+            if(!allowed_ids.includes(recipeID)){
+                toast.warning('Your dietry restriction forbids this recipe.')
+            }
             setDinnerSet(prev => new Set(prev.add(recipeID)))
         }
     }
@@ -97,19 +107,29 @@ export default function Page() {
         axios.get('/api/mealplan?catagory=dinner&search=').then((res) => {
             setDinner_recipes(res.data.data)
         })
+        axios.get('/api/check_dietry').then((res)=>{
+            setAllowed_recipes(res.data.data)
+        })
     }, [])
     const handleclick = () => {
         axios.post('/api/create_mealplan', {
             title: title,
             duration: duration,
-            date: startDate.$d,
             breakfast: Array.from(BreakfastSet),
             lunch: Array.from(LunchSet),
             dinner: Array.from(DinnerSet)
         }).then((res) => {
             console.log(res)
+            if(res.data.success)
+            {
+                toast.success('Meal Plan created')
+            }
+            else
+            throw new Error(res.data.message)
         }).catch((err) => {
             console.log(err)
+            toast.error(err.message)
+
         })
     }
 
@@ -120,11 +140,6 @@ export default function Page() {
                 <h1 className=" m-auto text-2xl text-left font-bold mb-3">
                     <input type="text" className="border-2 border-black rounded-md text-center text-black" placeholder='Title' onChange={(e) => setTitle(e.target.value)} />
                 </h1>
-                <LocalizationProvider dateAdapter={AdapterDayjs} className="m-auto">
-                    <DemoContainer components={['DatePicker']}>
-                        <DatePicker label="Basic date picker" onChange={(date) => setStartDate(date)} />
-                    </DemoContainer>
-                </LocalizationProvider>
                 <h3 className=" m-auto text-lg mt-3 text-left underline font-bold">
                     <input type='number' className="border-2 border-black rounded-md text-center text-black" placeholder='Duration' onChange={(e) => setDuration(e.target.value)} /> Days
                 </h3>

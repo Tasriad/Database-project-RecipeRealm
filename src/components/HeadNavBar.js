@@ -15,15 +15,15 @@ export default function HeadNavBar() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
     const path = useRef('')
-    const [image,setImage] = useState('')
+    const [image, setImage] = useState('')
     let searchPlaceholder = ''
     if (pathname.includes('/recipe')) {
         searchPlaceholder = 'Search for recipes'
-        path.current  = '/recipe'
+        path.current = '/recipe'
     }
     else if (pathname.includes('/profile')) {
         searchPlaceholder = 'Search for users'
-        path.current  = '/profile'
+        path.current = '/profile'
     }
     const handleLink = (e) => {
         e.preventDefault()
@@ -40,9 +40,9 @@ export default function HeadNavBar() {
     }
 
     useEffect(() => {
-        axios.get('/api/cookie_data').then((res)=>{
+        axios.get('/api/cookie_data').then((res) => {
             setImage(`/profile_images/${res.data.data.profile_pic}`)
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
         console.log('use effect')
@@ -70,13 +70,13 @@ export default function HeadNavBar() {
         setSearchQuery(e.target.value)
         console.log(searchQuery)
         optimizedChange(e.target.value)
-        
+
     }
     const debounce = (func, delay) => {
         let timer;
         return function (...args) {
             const context = this;
-            if(timer) clearTimeout(timer);
+            if (timer) clearTimeout(timer);
             timer = setTimeout(() => {
                 timer = null;
                 func.apply(context, args);
@@ -99,22 +99,22 @@ export default function HeadNavBar() {
                         <div className="absolute bg-white z-50  max-h-40 overflow-auto w-full border-2 rounded border-black">
                             {
                                 searchResults?.map((result) => {
-                                    if(path.current == '/profile')
-                                    return (
-                                        <Link href={'/profile/'+result.USER_ID} onclick={handleLink}>
-                                            <div className="flex flex-col flex-wrap hover:bg-blue-200 ">
-                                                <h1 className="text-2xl m-auto">{result.NAME ? result.NAME : result.TITLE}</h1>
-                                            </div>
-                                        </Link>
-                                    )
-                                    else if(path.current =='/recipe')
-                                    return(
-                                        <Link href={'/recipe/'+result.RECIPE_ID} onclick={handleLink}>
-                                            <div className="flex flex-col flex-wrap hover:bg-blue-200 ">
-                                                <h1 className="text-2xl m-auto">{result.NAME ? result.NAME : result.TITLE}</h1>
-                                            </div>
-                                        </Link>
-                                    )
+                                    if (path.current == '/profile')
+                                        return (
+                                            <Link href={'/profile/' + String(result.USER_ID ? result.USER_ID : result.RECIPE_ID)} onclick={handleLink}>
+                                                <div className="flex flex-col flex-wrap hover:bg-blue-200 ">
+                                                    <h1 className="text-2xl m-auto">{result.NAME ? result.NAME : result.TITLE}</h1>
+                                                </div>
+                                            </Link>
+                                        )
+                                    else if (path.current == '/recipe')
+                                        return (
+                                            <Link href={'/recipe/' + String(result.RECIPE_ID ? result.RECIPE_ID : result.USER_ID)} onclick={handleLink}>
+                                                <div className="flex flex-col flex-wrap hover:bg-blue-200 ">
+                                                    <h1 className="text-2xl m-auto">{result.NAME ? result.NAME : result.TITLE}</h1>
+                                                </div>
+                                            </Link>
+                                        )
                                 })
                             }
                         </div>
